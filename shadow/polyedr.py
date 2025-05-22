@@ -1,4 +1,4 @@
-from math import pi
+from math import pi, sqrt
 from functools import reduce
 from operator import add
 from common.r3 import R3
@@ -135,9 +135,10 @@ class Polyedr:
                     # обрабатываем первую строку; buf - вспомогательный массив
                     buf = line.split()
                     # коэффициент гомотетии
-                    c = float(buf.pop(0))
+                    self.c = float(buf.pop(0))
                     # углы Эйлера, определяющие вращение
-                    alpha, beta, gamma = (float(x) * pi / 180.0 for x in buf)
+                    self.alpha, self.beta, self.gamma = (
+                        float(x) * pi / 180.0 for x in buf)
                 elif i == 1:
                     # во второй строке число вершин, граней и рёбер полиэдра
                     nv, nf, ne = (int(x) for x in line.split())
@@ -145,7 +146,7 @@ class Polyedr:
                     # задание всех вершин полиэдра
                     x, y, z = (float(x) for x in line.split())
                     self.vertexes.append(R3(x, y, z).rz(
-                        alpha).ry(beta).rz(gamma) * c)
+                        self.alpha).ry(self.beta).rz(self.gamma) * self.c)
                 else:
                     # вспомогательный массив
                     buf = line.split()
@@ -158,6 +159,27 @@ class Polyedr:
                         self.edges.append(Edge(vertexes[n - 1], vertexes[n]))
                     # задание самой грани
                     self.facets.append(Facet(vertexes))
+
+    # Удаление влияния гомотетии и вращения (углы Эйлера) на точку
+    def deconvert_point(self, point):
+        point *= 1/self.c
+        point = point.rz(-self.gamma).ry(-self.beta).rz(-self.alpha)
+        return point
+
+    # Вычисление суммы площадей проекций граней, центр которых - «хорошая» точка
+    def good_area(self):
+        ans = 0.0
+        for f in self.facets:
+            f1 = Facet([self.deconvert_point(v) for v in f.vertexes])
+            if f1.center().good():
+                n = len(f1.vertexes)
+                area = 0.0
+                for i in range(n):
+                    p_i = f1.vertexes[i]
+                    p_nxt = f1.vertexes[(i + 1) % n]
+                    area += p_i.x * p_nxt.y - p_nxt.x * p_i.y
+                ans += abs(area) / 2
+        return ans
 
     # Метод изображения полиэдра
     def draw(self, tk):  # pragma: no cover

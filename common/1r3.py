@@ -9,6 +9,7 @@ class R3:
         self.x, self.y, self.z = x, y, z
 
     # «Хорошая» ли точка?
+    @property
     def good(self):
         return 1 < sqrt(self.x**2 + self.y**2) < 2
 
