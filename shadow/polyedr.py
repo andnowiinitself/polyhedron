@@ -166,7 +166,8 @@ class Polyedr:
         point = point.rz(-self.gamma).ry(-self.beta).rz(-self.alpha)
         return point
 
-    # Вычисление суммы площадей проекций граней, центр которых - «хорошая» точка
+    # Вычисление суммы площадей проекций граней,
+    # центр которых - «хорошая» точка
     def good_area(self):
         ans = 0.0
         for f in self.facets:

@@ -20,7 +20,7 @@ class TestPolyedr1(unittest.TestCase):
 3.0 1.0 1.0
 3.0 -1.0 1.0
 0.0 -1.0 1.0
-4	1    2    3    4   
+4	1    2    3    4
 4	5    6    7    8
 4   5    1    4    8
 4	2    6    7    3
@@ -60,7 +60,7 @@ class TestPolyedr2(unittest.TestCase):
 3.0 1.0 1.0
 3.0 -1.0 1.0
 0.0 -1.0 1.0
-4	1    2    3    4   
+4	1    2    3    4
 4	5    6    7    8
 4   5    1    4    8
 4	2    6    7    3
@@ -100,7 +100,7 @@ class TestPolyedr3(unittest.TestCase):
 6.0 1.0 3.0
 6.0 6.0 3.0
 1.0 6.0 3.0
-4	1    2    3    4    
+4	1    2    3    4
 4	5    6    7    8"""
         fake_file_path = 'data/hz.geom'
         with patch('shadow.polyedr.open'.format(__name__),
